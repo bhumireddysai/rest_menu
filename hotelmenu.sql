@@ -319,7 +319,7 @@ CREATE TABLE `hotelmenu_items` (
 
 LOCK TABLES `hotelmenu_items` WRITE;
 /*!40000 ALTER TABLE `hotelmenu_items` DISABLE KEYS */;
-INSERT INTO `hotelmenu_items` VALUES (1,'Sandwich Lunch','lunch',25,2),(2,'Half Sandwich Lunch','lunch',35,1),(3,'dall curry','dinner',135,2),(4,'Chapati curry','dinner',235,2);
+INSERT INTO `hotelmenu_items` VALUES (1,'Sandwich Lunch','lunch',25,1),(2,'Half Sandwich Lunch','lunch',35,1),(3,'dall curry','dinner',135,2),(4,'Chapati curry','dinner',235,2);
 /*!40000 ALTER TABLE `hotelmenu_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -346,7 +346,7 @@ CREATE TABLE `hotelmenu_modifiers` (
 
 LOCK TABLES `hotelmenu_modifiers` WRITE;
 /*!40000 ALTER TABLE `hotelmenu_modifiers` DISABLE KEYS */;
-INSERT INTO `hotelmenu_modifiers` VALUES (1,'Extra Spicy',1),(2,'Regular Spicy',3),(3,'No Spicy',4),(4,'Extra Spicy',2);
+INSERT INTO `hotelmenu_modifiers` VALUES (1,'Extra Spicy',2),(2,'Regular Spicy',2),(3,'No Spicy',4),(4,'Extra Spicy',2);
 /*!40000 ALTER TABLE `hotelmenu_modifiers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -465,4 +465,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-06-21 11:48:06
+-- Dump completed on 2022-06-22 11:17:54
