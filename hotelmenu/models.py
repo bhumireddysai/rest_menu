@@ -14,7 +14,7 @@ class items(models.Model):
     name = models.CharField(max_length=200,unique=True)
     descriptions = models.CharField(max_length=200)
     price = models.IntegerField()
-    section_id =  models.ForeignKey(sections, db_column='section_id',on_delete=models.CASCADE)
+    section_id = models.ForeignKey(sections, db_column='section_id',on_delete=models.CASCADE)
 
 class modifiers(models.Model):
     Id = models.AutoField(primary_key=True)
