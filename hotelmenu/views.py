@@ -99,6 +99,37 @@ def insert_menu(request):
 
 
 @csrf_exempt
+def item(request, ID=None, body=None):
+    try:
+        if request.method == 'POST':
+            body = json.loads(request.body)
+            if body.get('category') == 'Item':
+                a = items(name=body['name'], descriptions=body['description'], price=body['price'],
+                          section_id=body['section_id'])
+                a.save()
+                return HttpResponse("successfully inserted record")
+            elif request.method == 'DELETE':
+                body = json.loads(request.body)
+                ID = int(body['id'])
+        elif body.get('category') == 'Item':
+            a = items.objects.filter(Id=ID).delete()
+            return HttpResponse("successfully Deleted record !")
+        # elif:
+        # 	return HttpResponse("Method Not Allowed!")
+        elif request.method == 'GET':
+            body = json.loads(request.body)
+            a = items(name=body['name'], descriptions=body['description'], price=body['price'],
+                      section_id=body['section_id'])
+            a.save()
+            return HttpResponse("successfully Retrieved record")
+        else:
+            return HttpResponse("Method Not Allowed!")
+
+    except Exception as e:
+        return HttpResponse('successfully retrieved record :', str(e))
+
+
+@csrf_exempt
 def item_mapping(request):
     try:
         # Endpoint for mapping the items and modifiers
