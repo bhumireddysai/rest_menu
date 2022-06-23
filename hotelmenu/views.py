@@ -26,7 +26,8 @@ def sections_menu(request):
         modifiers_list = []
         result = modifiers.objects.all()
         for book in result:
-            # import pdb;pdb.set_trace();
+            import pdb;
+            pdb.set_trace();
             if (str(sections.get('id')) == str(book.items_id.section_id.Id)):
                 modifiers_dict['id'] = str(book.Id)
                 modifiers_dict['title'] = book.descriptions
@@ -48,36 +49,21 @@ def sections_menu(request):
 
 
 @csrf_exempt
-def insert_menu(request):
+def insert_menu_sections(request):
     try:
         # Endpoint for insert and delete the records
-        # import pdb;pdb.set_trace();
         if request.method == 'POST':
             body = json.loads(request.body)
 
             if body.get('category') == 'Section':
                 a = sections(name=body['name'], descriptions=body['description'])
                 a.save()
-
-            elif body.get('category') == 'Item':
-                section_obj = sections.objects.get(Id=body['section_id'])
-                a = items(name=body['name'], descriptions=body['description'], price=body['price'],
-                          section_id=section_obj)
-                a.save()
-            elif body.get('category') == 'modifiers':
-                items_obj = items.objects.get(Id=body['items_id'])
-                a = modifiers(descriptions=body['description'], items_id=items_obj)
-                a.save()
-            return HttpResponse("successfully inserted record !")
+            return HttpResponse("successfully inserted record")
         elif request.method == 'DELETE':
             body = json.loads(request.body)
             ID = int(body['id'])
             if body.get('category') == 'Section':
                 a = sections.objects.filter(Id=ID).delete()
-            elif body.get('category') == 'Item':
-                a = items.objects.filter(Id=ID).delete()
-            elif body.get('category') == 'modifiers':
-                a = modifiers.objects.filter(Id=ID).delete()
             return HttpResponse("successfully Deleted record !")
         elif request.method == 'GET':
             body = json.loads(request.body)
@@ -85,13 +71,13 @@ def insert_menu(request):
             if body.get('category') == 'Section':
                 sections_obj = sections.objects.filter(Id=ID)
                 serialized_data = json.loads(serialize('json', list(sections_obj)))
-            elif body.get('category') == 'Item':
-                items_obj = items.objects.filter(Id=ID)
-                serialized_data = json.loads(serialize('json', list(items_obj)))
-            elif body.get('category') == 'modifiers':
-                modifiers_obj = modifiers.objects.filter(Id=ID)
-                serialized_data = json.loads(serialize('json', list(modifiers_obj)))
             return JsonResponse({'data': serialized_data})
+        elif request.method == 'PATCH':
+            body = json.loads(request.body)
+            ID = int(body['id'])
+            if body.get('category') == 'Section':
+                sections_obj = sections.objects.filter(Id=ID).update(name=body['name'])
+            return HttpResponse("Successfully Updated!")
         else:
             return HttpResponse("Method Not Allowed!")
     except Exception as e:
@@ -99,34 +85,78 @@ def insert_menu(request):
 
 
 @csrf_exempt
-def item(request, ID=None, body=None):
+def insert_menu_items(request):
     try:
+        # Endpoint for insert and delete the records
         if request.method == 'POST':
             body = json.loads(request.body)
             if body.get('category') == 'Item':
+                section_obj = sections.objects.get(Id=body['section_id'])
                 a = items(name=body['name'], descriptions=body['description'], price=body['price'],
-                          section_id=body['section_id'])
+                          section_id=section_obj)
                 a.save()
-                return HttpResponse("successfully inserted record")
-            elif request.method == 'DELETE':
-                body = json.loads(request.body)
-                ID = int(body['id'])
-        elif body.get('category') == 'Item':
-            a = items.objects.filter(Id=ID).delete()
+            return HttpResponse("successfully inserted record")
+        elif request.method == 'DELETE':
+            body = json.loads(request.body)
+            ID = int(body['id'])
+            if body.get('category') == 'Item':
+                a = items.objects.filter(Id=ID).delete()
             return HttpResponse("successfully Deleted record !")
-        # elif:
-        # 	return HttpResponse("Method Not Allowed!")
         elif request.method == 'GET':
             body = json.loads(request.body)
-            a = items(name=body['name'], descriptions=body['description'], price=body['price'],
-                      section_id=body['section_id'])
-            a.save()
-            return HttpResponse("successfully Retrieved record")
+            ID = int(body['id'])
+            if body.get('category') == 'Item':
+                items_obj = items.objects.filter(Id=ID)
+                serialized_data = json.loads(serialize('json', list(items_obj)))
+            return JsonResponse({'data': serialized_data})
+        elif request.method == 'PATCH':
+            body = json.loads(request.body)
+            ID = int(body['id'])
+            if body.get('category') == 'Item':
+                items_obj = items.objects.filter(Id=ID).update(name=body['name'])
+            return HttpResponse("Successfully Updated!")
         else:
             return HttpResponse("Method Not Allowed!")
-
     except Exception as e:
-        return HttpResponse('successfully retrieved record :', str(e))
+        return HttpResponse("Exception CRUD operations! :", str(e))
+
+
+@csrf_exempt
+def insert_menu_modifiers(request):
+    try:
+        # Endpoint for insert and delete the records
+        if request.method == 'POST':
+            body = json.loads(request.body)
+            if body.get('category') == 'modifiers':
+                # import pdb;pdb.set_trace();
+                items_obj = items.objects.get(Id=body['items_id'])
+                a = modifiers(descriptions=body['description'], items_id=items_obj)
+                a.save()
+            return HttpResponse("successfully inserted record")
+        elif request.method == 'DELETE':
+            body = json.loads(request.body)
+            ID = int(body['id'])
+            if body.get('category') == 'modifiers':
+                a = modifiers.objects.filter(Id=ID).delete()
+            return HttpResponse("successfully Deleted record !")
+        elif request.method == 'GET':
+            body = json.loads(request.body)
+            ID = int(body['id'])
+            if body.get('category') == 'modifiers':
+                modifiers_obj = modifiers.objects.filter(Id=ID)
+                serialized_data = json.loads(serialize('json', list(modifiers_obj)))
+            return JsonResponse({'data': serialized_data})
+        elif request.method == 'PATCH':
+            body = json.loads(request.body)
+            ID = int(body['id'])
+            if body.get('category') == 'modifiers':
+                modifiers_obj = modifiers.objects.filter(Id=ID).update(descriptions=body['description'])
+            # serialized_data = json.loads(serialize('json', list(modifiers_obj)))
+            return HttpResponse("Successfully Updated!")
+        else:
+            return HttpResponse("Method Not Allowed!")
+    except Exception as e:
+        return HttpResponse("Exception CRUD operations! :", str(e))
 
 
 @csrf_exempt
